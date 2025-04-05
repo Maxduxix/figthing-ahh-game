@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solarians</title>
+    <link rel="stylesheet" href="sol.css">
+    <script>
+
+let gs = JSON.parse(localStorage.getItem('gs')) || {
+//mainstats: (P)
+vitv: 1,
+strv: 1,
+defv: 0,
+atksv: 1,
+dexv: 1,
+evav: 0,
+lvl: 1,
+//mainstats: (E)
+vitve: 1,
+strve: 1,
+defve: 0,
+atksve: 1,
+dexve: 1,
+evave: 0,
+lvle: 1,
+//afstats: (P)
+hp: 10,
+stamina: 0,
+mp: 0,
+//afstats: (E)
+hpe: 10,
+staminae: 0,
+mpe: 0,
+//others
+hpmax: 100,
+hpemax: 100,
+expv: 0,
+goldv: 0,
+statpv: 0,
+//system
+atkr: false,
+g1: false
+};
+function logCombat(msg) {
+    const log = document.getElementById("combat-log");
+    log.innerHTML += "\n" + msg;
+    log.scrollTop = log.scrollHeight; // auto-scroll to bottom
+}
+
+
+function updui() {
+    document.getElementById('vit').innerText = "Player: VIT: "+ gs.vitv.toFixed(1);
+    document.getElementById('str').innerText = "STR: "+ gs.strv.toFixed(1);
+    document.getElementById('def').innerText = "DEF: "+ gs.defv.toFixed(1);
+    document.getElementById('atks').innerText = "ATK-S: "+ gs.atksv.toFixed(1);
+    document.getElementById('dex').innerText = "DEX: "+ gs.dexv.toFixed(1);
+    document.getElementById('eva').innerText = "EVA: "+ gs.evav.toFixed(1);
+    document.getElementById('lvl').innerText = "LVL: " + gs.lvl.toFixed(1);
+    document.getElementById('vite').innerText = " Enemy: VIT: "+ gs.vitve.toFixed(1);
+    document.getElementById('stre').innerText = "STR: "+ gs.strve.toFixed(1);
+    document.getElementById('defe').innerText = "DEF: "+ gs.defve.toFixed(1);
+    document.getElementById('atkse').innerText = "ATK-S: "+ gs.atksve.toFixed(1);
+    document.getElementById('dexe').innerText = "DEX: "+ gs.dexve.toFixed(1);
+    document.getElementById('evae').innerText = "EVA: "+ gs.evav.toFixed(1);
+    document.getElementById('lvle').innerText = "LVL: " + gs.lvle.toFixed(1)
+    document.getElementById('hpve').innerText = ""+ gs.hpe.toFixed(1);
+    document.getElementById('hpv').innerText = ""+ gs.hp.toFixed(1);
+    document.getElementById('hpemax').innerText = ""+ hpemax0.toFixed(1);
+    document.getElementById('hpmax').innerText = ""+ hpmax0.toFixed(1);
+    document.getElementById('ehpbar').style.backgroundSize = (gs.hpe / hpemax0 * 100) + "% 100%";
+    document.getElementById('hpbar').style.backgroundSize = (gs.hp / hpmax0 * 100) + "% 100%";
+
+    if (gs.atkr) {
+    let now = Date.now();
+    let elapsed = now - cdLast;
+    cdProgress = (elapsed % cdMax) / cdMax * 100;
+    document.getElementById('cdbar').style.backgroundSize = cdProgress + "% 100%";
+} else {
+    document.getElementById('cdbar').style.backgroundSize = "0% 100%";
+}
+if (gs.atkr) {
+    let nowe = Date.now();
+    let elapsede = nowe - cdeLast;
+    cdeProgress = (elapsede % cdeMax) / cdeMax * 100;
+    document.getElementById('cdebar').style.backgroundSize = cdeProgress + "% 100%";
+} else {
+    document.getElementById('cdebar').style.backgroundSize = "0% 100%";
+}
+
+}
+
+let cdv = (1000)/((gs.atksv)/10)
+let cdProgress = 0;
+let cdMax = cdv;
+let cdLast = Date.now();
+
+let cdve = (1000)/((gs.atksve)/10)
+let cdeProgress = 0;
+let cdeMax = cdve;
+let cdeLast = Date.now();
+
+let hpmax0 = (gs.hpmax)*(gs.vitv/6)
+let hpemax0 = ((Math.random()*150)*((gs.vitve)/10))
+
+let interval = setInterval(dmgR, cdv)
+let interval2 = setInterval(dmgE, cdve)
+
+function lose() {
+    if (gs.hp < 1) {
+        document.getElementById("combat-log").innerHTML = "<b>Combat Log:</b>";
+        logCombat("The enemy defeated you");
+        hpemax0 = ((Math.random()*100)*((gs.vitve)/6))
+        gs.atkr = false
+        gs.hp = hpmax0
+        gs.vitve += ((gs.vitv)/10)
+        gs.strve += ((gs.strv)/10)
+        gs.defve += ((gs.defv)/10)
+        gs.atksve += ((gs.atksv)/10)
+        gs.dexve += ((gs.dexv)/10)
+        gs.evave += ((gs.evave/10))
+ }  
+}
+
+function restarttime() {
+    if (interval) {
+        clearInterval(interval);
+    }
+    cdv = (2500) / ((gs.atksv+50) / 50);
+    cdMax = cdv;
+    cdLast = Date.now(); // resets the bar progress
+    interval = setInterval(dmgR, cdv);
+}
+
+
+
+function restarttime2() {
+    if (interval2) {
+        clearInterval(interval2);
+    }
+    cdve = (2500) / ((gs.atksve+50) / 50);
+    cdeMax = cdve;
+    cdeLast = Date.now(); // resets the bar progress
+    interval2 = setInterval(dmgE, cdve);
+}
+ 
+function win() {
+    if (gs.hpe < 1 && gs.g1 == false) {
+        gs.atkr = false
+        gs.g1 = true
+        hpemax0 = ((Math.random()*100)*((gs.vitve)/6))
+
+    document.getElementById("combat-log").innerHTML = "<b>Combat Log:</b>";
+
+
+
+    }};
+function s0enemy(params) {
+    if (gs.g1 == true) {
+        logCombat("You defeated the enemy");
+        gs.g1 = false
+        gs.hpe = hpemax0
+        gs.vitv += ((gs.vitve)/10)
+        gs.strv += ((gs.strve)/10)
+        gs.defv += ((gs.defve)/10)
+        gs.atksv += ((gs.atksve)/10)
+        gs.dexv += ((gs.dexve)/10)
+        gs.evav += ((gs.evave)/10)
+    }
+    
+}
+
+
+function dmgA() {
+if (gs.atkr == false) {
+    gs.hpe = hpemax0
+    gs.atkr = !gs.atkr;
+    restarttime();
+    restarttime2(); 
+}
+}
+
+function dmgR() {
+    if (gs.hpe > 0 && gs.atkr === true) {
+        let isCrit = Math.random() < 0.2;
+        let dmg = 1 + gs.strv;
+        if (isCrit) dmg *= 2;
+
+        gs.hpe -= dmg;
+        updui();
+
+        let logMsg = `(Player) Damage: ${dmg.toFixed(1)}${isCrit ? " (CRITICAL)" : ""}\nEnemy HP: ${gs.hpe.toFixed(1)}`;
+        logCombat(logMsg);
+}};
+
+function dmgE() {
+    if (gs.hpe > 0 && gs.atkr === true) {
+        let isCrit = Math.random() < 0.2;
+        let dmg = 1 + gs.strve;
+        if (isCrit) dmg *= 2;
+
+        gs.hp -= dmg;
+        updui();
+
+        let logMsg = `(Enemy) Damage: ${dmg.toFixed(1)}${isCrit ? " (CRITICAL)" : ""}\nYour HP: ${gs.hp.toFixed(1)}`;
+        logCombat(logMsg);
+
+      
+    }
+}
+
+
+function SIgroup() {
+    hpmax0 = (gs.hpmax)*(gs.vitv/10)
+    lose()
+    s0enemy()
+    win()
+    localStorage.setItem('gs', JSON.stringify(gs)); 
+    updui();
+}
+window.onload = function() {
+    updui();
+    setInterval(SIgroup, 100);
+};
+
+function reset() {
+    gs = {}
+    localStorage.removeItem("gs");
+    localStorage.clear();
+    location.reload();
+}
+localStorage.clear();
+
+    </script>
+</head>
+<body class="body">
+    <button onclick="reset()" class="resetb">RESET DATA (Press Twice)</button>
+<div style="font-size: 20px;">STATS:</div>
+
+<div class="stat">
+    <div class="enemy">
+        <div class="vite" id="vite">Enemy: VIT: 0</div>
+        <div class="atke" id="stre"> STR: 0</div>
+        <div class="defe" id="defe"> DEF: 0</div>
+        <div class="atkse" id="atkse">ATK-S: 0 </div>
+        <div class="dexe" id="dexe">DEX: 0</div>
+        <div class="evae" id="evae">EVA: 0</div>
+        <div class="lvle" id="lvle">LVL: 0</div>
+    </div>
+
+    <div class="plr">
+        <div class="vit" id="vit">Player: VIT: 0</div>
+        <div class="atk" id="str"> STR: 0</div>
+        <div class="def" id="def"> DEF: 0</div>
+        <div class="atks" id="atks"> ATK-S: 0 </div>
+        <div class="dex" id="dex">DEX: 0</div>
+        <div class="eva" id="eva">EVA: 0</div>
+        <div class="lvl" id="lvl">LVL: 0</div>
+    </div>  
+</div>
+
+<div class="ehp" id="ehp">Enemy Health: 
+    <div class="ehpbar" id="ehpbar"></div>
+    <div class="ehp1" id="hpe">( 
+        <div id="hpve">0</div> / <div id="hpemax">100</div> )
+    </div>
+</div>
+<div class="ehp" id="hp">Player .Health: 
+    <div class="ehpbar" id="hpbar"></div>
+    <div class="ehp1" id="hp">( 
+        <div id="hpv">0</div> / <div id="hpmax">100</div> )
+    </div>
+</div>
+<div class="f1">
+    <button class="fightb" id="fightb" onclick="dmgA()"> FIGHT (auto)</button>
+  <div> CD: ( 0s / 5s )</div>
+  <div class="cdbar" id="cdbar"></div>
+  <div class="cdebar" id="cdebar"></div>
+</div>
+  <div id="combat-log" style="
+  background: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  font-family: monospace;
+  font-size: 14px;
+  padding: 2px;
+  margin-top: 1px;
+  width: 300px;
+  height: 160px;
+  overflow-y: auto;
+  border: 2px solid rgb(255, 0, 0);
+  white-space: pre-line;
+">
+<b>Combat Log:</b>
+
+  
+</div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+.body {
+    background-color: rgb(255, 255, 255);
+}
+.enemy {
+    margin: 4px;
+    display: flex;
+    gap: 12px;
+}
+.plr {
+    margin: 4px;
+    display: flex;
+    gap: 12px;
+}
+.stat {
+    margin-bottom: 10px;
+    margin-top: 7px;
+}
+.ehp {
+    display: flex;
+    gap: 14px;
+}
+.ehpbar, .hpbar {
+    border: 1px solid #2c3e50;
+        width: 220px;
+        height: 16px;
+        background: linear-gradient(to left, #004d1b 100%, transparent 40%);
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        transition: background-size 0.3s ease;
+}
+
+.fightb {
+    color: black;
+    background-color: red;
+    height: 20px;
+    width: 150px;
+}
+.f1 {
+    gap: 10px;
+    margin-top: 10px;
+    display: flex;
+}
+.resetb {
+    height: 27px;
+    width: 270px;
+}
+.ehp1 {
+    display: flex;
+    gap: 8px;
+}
+.cdbar {
+    width: 180px;
+    height: 12px;
+    background: linear-gradient(to right, #3498db 100%, transparent 0%);
+    background-size: 0% 100%;
+    background-repeat: no-repeat;
+    border: 1px solid #2c3e50;
+    margin-top: 6px;
+    transition: background-size 0.05s linear;
+  }
+  .cdebar {
+    width: 180px;
+    height: 12px;
+    background: linear-gradient(to right, #c41111 100%, transparent 0%);
+    background-size: 0% 100%;
+    background-repeat: no-repeat;
+    border: 1px solid #2c3e50;
+    margin-top: 6px;
+    transition: background-size 0.05s linear;
+  }
+
+
+  
